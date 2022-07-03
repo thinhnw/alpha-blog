@@ -4,9 +4,11 @@ class CategoriesController < ApplicationController
   def index
     @categories = Category.paginate(page: params[:page], per_page: 5)
   end
+
   def new
     @category = Category.new
   end
+
   def show
     @category = Category.find_by(id: params[:id])
     @articles = @category.articles.paginate(page: params[:page], per_page: 5)
@@ -19,6 +21,20 @@ class CategoriesController < ApplicationController
       redirect_to category_url(@category)
     else
       render 'new'
+    end
+  end
+
+  def edit
+    @category = Category.find(params[:id])
+  end
+
+  def update
+    @category = Category.find(params[:id])
+    if @category.update(category_params)
+      flash[:notice] = "Category name updated successfully"
+      redirect_to @category
+    else
+      render 'edit'
     end
   end
 
